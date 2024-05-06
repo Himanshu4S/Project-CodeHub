@@ -1,0 +1,59 @@
+<% layout("/layouts/boilerplate") %>
+<div class="row">
+  <div class="col-8 offset-2">
+    <h3 class="mt-4">Add New CodeSheet</h3>
+    <form method="POST" action="/listings" novalidate class="needs-validation">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="text"
+          name="listing[title]"
+          placeholder="Enter Title"
+          class="form-control"
+          required
+        />
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please choose a Title.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="user" class="form-label">user</label>
+        <input
+          type="text"
+          name="listing[user]"
+          placeholder="Enter user name"
+          class="form-control"
+          required
+        />
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please fill some User Name.</div>
+      </div>
+
+      <div class="row">
+        <div class="mb-3">
+          <label for="type" class="form-label">Language</label>
+          <select
+            name="listing[type]"
+            class="form-select"
+            aria-label="Default select example"
+            required
+          >
+            <option value="" selected disabled>Select language</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="Python">Python</option>
+            <option value="Java">Java</option>
+            <option value="C">C</option>
+            <option value="C++">C++</option>
+            <option value="PHP">PHP</option>
+
+            <!-- Add more options as needed -->
+          </select>
+          <div class="valid-feedback">Language looks good!</div>
+          <div class="invalid-feedback">Please select a valid language.</div>
+        </div>
+      </div>
+
+      <button class="btn btn-dark add-btn mb-5">Add</button>
+    </form>
+  </div>
+</div>

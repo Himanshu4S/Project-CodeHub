@@ -1,0 +1,124 @@
+<% layout("/layouts/boilerplate") %>
+<body>
+  <br />
+
+  <div class="row">
+    <!-- Left section: Listing details -->
+    <div class="col-md-2">
+      <h3>Code Details</h3>
+      <br /><br />
+      <div>
+        <b>Title:</b> <%= listing.title %><br />
+        <b>User:</b> <%= listing.user %><br />
+        <b>Language:</b> <%= listing.type %><br />
+      </div>
+      <br /><br />
+      <div class="d-grid gap-2">
+        <button
+          id="save-btn"
+          type="button"
+          class="btn btn-outline-success btn-md"
+        >
+          Save</button
+        ><br /><br />
+        <button
+          id="delete-btn"
+          type="button"
+          class="btn btn-outline-danger btn-md"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <!-- Right section: Code editor -->
+    <div class="col-md-10">
+      <div
+        id="editor-container"
+        style="margin: 2% auto; width: 96%; height: 400px"
+      ></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+  <script>
+    const editor = ace.edit("editor-container");
+    editor.setTheme("ace/theme/monokai");
+
+    // Function to set editor mode based on language
+    function setEditorMode(language) {
+      let mode;
+      switch (language) {
+        case "C":
+          mode = "ace/mode/c_cpp";
+          break;
+        case "C++":
+          mode = "ace/mode/c_cpp";
+          break;
+        case "PHP":
+          mode = "ace/mode/php";
+          break;
+        case "Python":
+          mode = "ace/mode/python";
+          break;
+        case "JavaScript":
+          mode = "ace/mode/javascript";
+          break;
+        case "Java":
+          mode = "ace/mode/java";
+          break;
+        default:
+          mode = "ace/mode/text";
+      }
+      editor.session.setMode(mode);
+    }
+
+    // Set editor mode initially
+    setEditorMode("<%= listing.type %>");
+
+    // Set editor value
+    editor.setValue(`<%= listing.code %>`);
+
+    document.getElementById("delete-btn").addEventListener("click", () => {
+      // Send DELETE request to remove the listing
+      fetch(`/listings/<%= listing._id %>`, {
+        method: "DELETE",
+      })
+        .then((response) => {
+          // Redirect to index page after deletion
+          window.location.href = "/listings";
+        })
+        .catch((error) => {
+          console.error("Error deleting listing:", error);
+        });
+    });
+
+    document.getElementById("save-btn").addEventListener("click", () => {
+      const code = editor.getValue();
+      const listingId = "<%= listing._id %>"; // Get the listing ID from the server-side template
+
+      // Send PUT request to update the listing
+      fetch(`/listings/${listingId}`, {
+        method: "PUT", // Use PUT method for updating
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ listing: { code } }), // Include code in the request body
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Handle successful update response
+            // For example, redirect to the updated listing page
+            window.location.href = `/listings/${listingId}`;
+          } else {
+            // Handle unsuccessful response
+            // For example, display an error message to the user
+            console.error("Error updating listing:", response.statusText);
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating listing:", error);
+        });
+    });
+  </script>
+</body>
